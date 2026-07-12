@@ -162,6 +162,701 @@ footer{background:var(--night);color:rgba(255,255,255,.6);padding:40px 0 20px;ma
 .filters-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
 .filters-row select{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--ink);font-family:inherit;font-size:.85rem;}
 
+/* CREDIT STYLING */
+.developer-credit {
+  text-align: center;
+  margin-bottom: 12px;
+  font-size: 0.82rem;
+  direction: rtl;
+}
+.dev-link {
+  color: var(--amber) !important;
+  text-decoration: none;
+  margin-right: 5px;
+  display: inline-block;
+  transition: all 0.25s ease;
+  position: relative;
+}
+.dev-link:hover {
+  color: var(--gold) !important;
+  transform: translateY(-1px);
+}
+.dev-link::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--gold);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+.dev-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom right;
+}
+
+@media(max-width:640px){
+  .top-bar{flex-wrap:wrap;gap:10px;padding:12px 0;}
+  .brand h1{font-size:1.15rem;}
+  .brand img{width:38px;height:38px;}
+  .search-box{order:3;max-width:100%;flex:1 1 100%;}
+  .icon-btn{width:36px;height:36px;}
+  .hero-main{min-height:300px;}
+  .hero-main-content{min-height:300px;padding:20px;}
+  .hero-main-content h2{font-size:1.35rem;}
+  .hero-side-card img{width:80px;height:70px;}
+  .section-head h2{font-size:1.25rem;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:18px;}
+  .newsletter{padding:24px 18px;}
+  .article-header h1{font-size:1.4rem;}
+  .rank-item img{width:64px;height:50px;}
+  .wrap{padding:0 14px;}
+}
+@media(max-width:420px){
+  .foot-grid{grid-template-columns:1fr;}
+  .grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap top-bar">
+    <a href="#/" class="brand">
+      <img id="site-logo" src="https://i.ibb.co/dsFP7MB8/FB-IMG-1783701554651.jpg" alt="شعار الموقع">
+      <div>
+        <h1 id="site-name" class="display">النهضة اليوم</h1>
+        <span>أخبار لحظة بلحظة</span>
+      </div>
+    </a>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="ابحث عن خبر...">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    </div>
+    <button class="icon-btn" id="theme-toggle" title="الوضع الليلي">🌙</button>
+  </div>
+  <nav class="sections wrap" id="sections-nav"></nav>
+</header>
+
+<div class="ticker-bar">
+  <div class="ticker-label">عاجل</div>
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+
+<div class="dawn-line"></div>
+
+<div id="banner-top" class="banner-slot wrap"></div>
+
+<main id="home-view">
+  <div class="wrap">
+    <section class="hero" id="hero-section"></section>
+
+    <div id="banner-mid" class="banner-slot"></div>
+
+    <section class="section-block">
+      <div class="filters-row">
+        <select id="filter-section"><option value="">كل الأقسام</option></select>
+        <select id="filter-sort">
+          <option value="latest">الأحدث</option>
+          <option value="views">الأكثر قراءة</option>
+        </select>
+      </div>
+      <div class="section-head"><h2>آخر الأخبار</h2></div>
+      <div class="grid" id="latest-grid"></div>
+      <button class="btn-amber load-more" id="load-more-btn">تحميل المزيد</button>
+    </section>
+
+    <section class="section-block two-col">
+      <div>
+        <div class="section-head"><h2>الأكثر تداولاً</h2></div>
+        <div class="rank-list" id="trending-list"></div>
+      </div>
+      <div>
+        <div class="section-head"><h2>اختيارات المحرر</h2></div>
+        <div class="rank-list" id="editor-list"></div>
+      </div>
+    </section>
+
+    <div id="banner-before-newsletter" class="banner-slot"></div>
+
+    <div class="newsletter">
+      <h2 class="display">النشرة البريدية</h2>
+      <p>اشترك ليصلك كل جديد أولاً بأول</p>
+      <form id="newsletter-form">
+        <input type="email" placeholder="بريدك الإلكتروني" required id="newsletter-email">
+        <button class="btn-amber" type="submit">اشتراك</button>
+      </form>
+    </div>
+
+    <section class="section-block">
+      <div class="section-head"><h2>مقترح لك</h2></div>
+      <div class="grid" id="recommended-grid"></div>
+    </section>
+  </div>
+</main>
+
+<div id="article-view">
+  <div class="wrap">
+    <div class="article-header">
+      <a href="#/" class="back-link">→ عودة للرئيسية</a>
+      <span class="tag-chip" id="a-section"></span>
+      <h1 id="a-title"></h1>
+      <div class="meta-row" id="a-meta"></div>
+    </div>
+    <img class="article-cover" id="a-image" src="" alt="">
+    <div id="banner-in-article-top" class="banner-slot"></div>
+    <article class="article-content" id="a-content"></article>
+    <div id="banner-in-article-bottom" class="banner-slot"></div>
+    <div class="wrap" style="max-width:780px;margin:0 auto;">
+      <div class="share-row">
+        <button class="share-btn" onclick="shareArticle()">🔗 مشاركة</button>
+        <button class="share-btn" onclick="copyLink()">📋 نسخ الرابط</button>
+      </div>
+    </div>
+    <div class="comments-block">
+      <div class="section-head"><h2 id="comments-count">التعليقات</h2></div>
+      <form class="comment-form" id="comment-form">
+        <input type="text" placeholder="الاسم" id="c-name" required>
+        <textarea placeholder="اكتب تعليقك..." id="c-text" rows="3" required></textarea>
+        <button class="btn-amber" type="submit" style="width:fit-content;">إرسال التعليق</button>
+      </form>
+      <div id="comments-list"></div>
+    </div>
+    <section class="section-block">
+      <div class="section-head"><h2>أخبار مشابهة</h2></div>
+      <div class="grid" id="related-grid"></div>
+    </section>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4 id="foot-site-name" class="display">النهضة اليوم</h4>
+        <p style="font-size:.82rem;">جريدتك الإخبارية اليومية، نرصد ونحلل ما يهمك أولاً بأول.</p>
+      </div>
+      <div>
+        <h4>الموقع</h4>
+        <a href="#/">الرئيسية</a>
+        <a href="#/page/about">من نحن</a>
+        <a href="#/page/contact">اتصل بنا</a>
+      </div>
+      <div>
+        <h4>سياسات</h4>
+        <a href="#/page/privacy">سياسة الخصوصية</a>
+        <a href="#/page/terms">شروط الاستخدام</a>
+        <a href="#/page/cookies">سياسة الكوكيز</a>
+      </div>
+      <div>
+        <h4>أخرى</h4>
+        <a href="#/page/ads">صفحة الإعلانات</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div class="developer-credit">
+        <span style="opacity: 0.85;">تم التطوير بواسطة</span> 
+        <a href="https://yossefelnggar-profile.vercel.app/" target="_blank" rel="noopener noreferrer" class="dev-link">
+          <strong class="display" style="font-size: 0.9rem; font-weight: 700;">يوسف النجار | Yossefelnggar</strong>
+        </a>
+      </div>
+      © <span id="year"></span> جميع الحقوق محفوظة
+    </div>
+  </div>
+</footer>
+
+<div id="page-view" style="display:none;">
+  <div class="wrap" style="padding:40px 0;max-width:780px;">
+    <a href="#/" class="back-link">→ عودة للرئيسية</a>
+    <h1 class="display" id="page-title" style="font-size:1.8rem;margin-bottom:16px;"></h1>
+    <div id="page-body" style="line-height:2;color:var(--muted);"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAUJ1C6VFzaOPJYhbxrqcdZXBEHKStTris",
+  authDomain: "news-a613e.firebaseapp.com",
+  databaseURL: "https://news-a613e-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "news-a613e",
+  storageBucket: "news-a613e.firebasestorage.app",
+  messagingSenderId: "173472736819",
+  appId: "1:173472736819:web:cfac0b685109850eb7e546"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let SETTINGS = {};
+let SECTIONS = {};
+let NEWS = {};
+let renderedCount = 0;
+const PAGE_SIZE = 9;
+
+const pageDefaults = {
+  about: {title:"من نحن", body:"النهضة اليوم منصة إخبارية تهدف لتقديم الأخبار بمصداقية وسرعة."},
+  contact: {title:"اتصل بنا", body:"للتواصل معنا يمكنكم مراسلتنا عبر البريد الإلكتروني."},
+  privacy: {title:"سياسة الخصوصية", body:"نحترم خصوصية زوارنا ولا نشارك بياناتهم مع أي طرف ثالث دون إذن."},
+  terms: {title:"شروط الاستخدام", body:"باستخدامك هذا الموقع فإنك توافق على شروط الاستخدام الخاصة بنا."},
+  cookies: {title:"سياسة الكوكيز", body:"يستخدم هذا الموقع ملفات تعريف الارتباط لتحسين تجربة التصفح."},
+  ads: {title:"صفحة الإعلانات", body:"للاستفسار عن الإعلانات على الموقع يرجى التواصل معنا."}
+};
+
+// ---------- SETTINGS ----------
+db.ref('settings').on('value', (snap) => {
+  SETTINGS = snap.val() || {};
+  applySettings();
+});
+
+function applySettings(){
+  const name = SETTINGS.siteName || "النهضة اليوم";
+  const logo = SETTINGS.logoUrl || "https://i.ibb.co/dsFP7MB8/FB-IMG-1783701554651.jpg";
+  document.title = name;
+  document.getElementById('site-name').textContent = name;
+  document.getElementById('foot-site-name').textContent = name;
+  document.getElementById('site-logo').src = logo;
+  document.getElementById('favicon').href = logo;
+  if(SETTINGS.seoDescription){
+    document.querySelector('meta[name="description"]').setAttribute('content', SETTINGS.seoDescription);
+  }
+  // banners
+  const slots = ['top','mid','before-newsletter','in-article-top','in-article-bottom'];
+  slots.forEach(s=>{
+    const el = document.getElementById('banner-'+s);
+    if(el && SETTINGS.banners && SETTINGS.banners[s]){
+      el.innerHTML = SETTINGS.banners[s];
+    }
+  });
+  // GA
+  if(SETTINGS.gaId && !window.__gaLoaded){
+    window.__gaLoaded = true;
+    const s1 = document.createElement('script');
+    s1.async = true;
+    s1.src = `https://www.googletagmanager.com/gtag/js?id=${SETTINGS.gaId}`;
+    document.head.appendChild(s1);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', SETTINGS.gaId);
+  }
+}
+
+// ---------- SECTIONS ----------
+db.ref('sections').on('value', (snap) => {
+  SECTIONS = snap.val() || {};
+  renderSectionsNav();
+  renderFilterSections();
+});
+
+function renderSectionsNav(){
+  const nav = document.getElementById('sections-nav');
+  const arr = Object.entries(SECTIONS).sort((a,b)=> (a[1].order||0)-(b[1].order||0));
+  nav.innerHTML = arr.map(([id,s])=>`<a href="#/section/${id}">${s.name}</a>`).join('');
+}
+function renderFilterSections(){
+  const sel = document.getElementById('filter-section');
+  const arr = Object.entries(SECTIONS);
+  sel.innerHTML = '<option value="">كل الأقسام</option>' + arr.map(([id,s])=>`<option value="${id}">${s.name}</option>`).join('');
+}
+
+// ---------- NEWS ----------
+db.ref('news').on('value', (snap) => {
+  NEWS = snap.val() || {};
+  route();
+});
+
+function publishedNews(){
+  return Object.entries(NEWS).filter(([id,n]) => n.status === 'published');
+}
+function sortedByDate(list){
+  return [...list].sort((a,b)=> (b[1].createdAt||0) - (a[1].createdAt||0));
+}
+function sortedByViews(list){
+  return [...list].sort((a,b)=> (b[1].views||0) - (a[1].views||0));
+}
+
+function cardHTML([id,n]){
+  const sec = SECTIONS[n.sectionId]?.name || '';
+  return `<a href="#/article/${id}" class="card">
+    <img class="thumb" src="${n.image||''}" alt="${n.title}">
+    <div class="card-body">
+      <span class="tag-chip" style="width:fit-content;">${sec}</span>
+      <h3>${n.title}</h3>
+      <p>${n.description||''}</p>
+      <div class="meta-row"><span>${n.author||''}</span><span class="dot"></span><span>${timeAgo(n.createdAt)}</span><span class="dot"></span><span>${n.readTime||3} د قراءة</span></div>
+    </div>
+  </a>`;
+}
+
+function rankItemHTML([id,n], i){
+  return `<a href="#/article/${id}" class="rank-item">
+    <span class="rank-num">${i+1}</span>
+    <img src="${n.image||''}" alt="">
+    <div><h4>${n.title}</h4><div class="meta-row"><span>${n.views||0} مشاهدة</span></div></div>
+  </a>`;
+}
+
+function timeAgo(ts){
+  if(!ts) return '';
+  const diff = Date.now() - ts;
+  const m = Math.floor(diff/60000), h = Math.floor(diff/3600000), d = Math.floor(diff/86400000);
+  if(m<60) return `منذ ${m||1} د`;
+  if(h<24) return `منذ ${h} س`;
+  return `منذ ${d} يوم`;
+}
+
+function renderHome(){
+  const pub = publishedNews();
+  const byDate = sortedByDate(pub);
+  // hero
+  const hero = document.getElementById('hero-section');
+  if(byDate.length){
+    const [mainId, mainN] = byDate[0];
+    const sideItems = byDate.slice(1,3);
+    hero.innerHTML = `<div class="hero-grid">
+      <a href="#/article/${mainId}" class="hero-main">
+        <img src="${mainN.image||''}" alt="">
+        <div class="hero-main-content">
+          <span class="tag-chip">${SECTIONS[mainN.sectionId]?.name||''}</span>
+          <h2>${mainN.title}</h2>
+          <p>${mainN.description||''}</p>
+        </div>
+      </a>
+      <div class="hero-side">
+        ${sideItems.map(([id,n])=>`<a href="#/article/${id}" class="hero-side-card">
+          <img src="${n.image||''}" alt="">
+          <div><h3>${n.title}</h3><div class="meta-row"><span>${timeAgo(n.createdAt)}</span></div></div>
+        </a>`).join('')}
+      </div>
+    </div>`;
+  } else {
+    hero.innerHTML = `<div class="empty-state">لا توجد أخبار منشورة بعد</div>`;
+  }
+
+  // ticker (breaking)
+  const breaking = pub.filter(([id,n])=>n.isBreaking);
+  document.getElementById('ticker-track').innerHTML = breaking.length
+    ? breaking.map(([id,n])=>`<span><a href="#/article/${id}">${n.title}</a></span>`).join('')
+    : `<span>أهلاً بكم في ${SETTINGS.siteName||'النهضة اليوم'}</span>`;
+
+  renderLatestGrid();
+
+  // trending = most viewed
+  document.getElementById('trending-list').innerHTML = sortedByViews(pub).slice(0,5).map(rankItemHTML).join('') || `<div class="empty-state">لا يوجد</div>`;
+  // editor picks
+  const picks = pub.filter(([id,n])=>n.editorPick);
+  document.getElementById('editor-list').innerHTML = picks.slice(0,5).map(rankItemHTML).join('') || `<div class="empty-state">لا يوجد</div>`;
+  // recommended = random-ish recent excluding hero
+  document.getElementById('recommended-grid').innerHTML = byDate.slice(3,9).map(cardHTML).join('') || `<div class="empty-state">لا يوجد</div>`;
+}
+
+function renderLatestGrid(sectionFilter='', sortMode='latest'){
+  let pub = publishedNews();
+  if(sectionFilter) pub = pub.filter(([id,n])=>n.sectionId===sectionFilter);
+  pub = sortMode==='views' ? sortedByViews(pub) : sortedByDate(pub);
+  renderedCount = PAGE_SIZE;
+  const slice = pub.slice(0, renderedCount);
+  document.getElementById('latest-grid').innerHTML = slice.map(cardHTML).join('') || `<div class="empty-state">لا توجد أخبار</div>`;
+  document.getElementById('load-more-btn').style.display = pub.length > renderedCount ? 'block':'none';
+  document.getElementById('load-more-btn').onclick = () => {
+    renderedCount += PAGE_SIZE;
+    document.getElementById('latest-grid').innerHTML = pub.slice(0,renderedCount).map(cardHTML).join('');
+    document.getElementById('load-more-btn').style.display = pub.length > renderedCount ? 'block':'none';
+  };
+}
+
+document.getElementById('filter-section').addEventListener('change', applyFilters);
+document.getElementById('filter-sort').addEventListener('change', applyFilters);
+function applyFilters(){
+  renderLatestGrid(document.getElementById('filter-section').value, document.getElementById('filter-sort').value);
+}
+
+// ---------- SEARCH ----------
+document.getElementById('search-input').addEventListener('input', (e)=>{
+  const q = e.target.value.trim();
+  if(!q){ renderLatestGrid(); return; }
+  const pub = publishedNews().filter(([id,n]) => (n.title||'').includes(q) || (n.description||'').includes(q) || (n.keywords||'').includes(q));
+  document.getElementById('latest-grid').innerHTML = pub.map(cardHTML).join('') || `<div class="empty-state">لا توجد نتائج لـ "${q}"</div>`;
+  document.getElementById('load-more-btn').style.display = 'none';
+});
+
+// ---------- ARTICLE VIEW ----------
+function renderArticle(id){
+  const n = NEWS[id];
+  if(!n){ location.hash = '#/'; return; }
+  document.getElementById('a-section').textContent = SECTIONS[n.sectionId]?.name || '';
+  document.getElementById('a-title').textContent = n.title;
+  document.title = n.title + ' - ' + (SETTINGS.siteName||'النهضة اليوم');
+  document.getElementById('a-meta').innerHTML = `<span>${n.author||''}</span><span class="dot"></span><span>${new Date(n.createdAt).toLocaleDateString('ar-EG')}</span><span class="dot"></span><span>${n.readTime||3} د قراءة</span><span class="dot"></span><span id="a-views">${n.views||0} مشاهدة</span>`;
+  document.getElementById('a-image').src = n.image||'';
+  document.getElementById('a-content').innerHTML = (n.content||'').split('\n').filter(p=>p.trim()).map(p=>`<p>${p}</p>`).join('');
+
+  // schema.org
+  let schemaTag = document.getElementById('schema-tag');
+  if(schemaTag) schemaTag.remove();
+  schemaTag = document.createElement('script');
+  schemaTag.type = 'application/ld+json';
+  schemaTag.id = 'schema-tag';
+  schemaTag.textContent = JSON.stringify({
+    "@context":"https://schema.org","@type":"NewsArticle",
+    "headline": n.title, "image": [n.image||''], "datePublished": new Date(n.createdAt).toISOString(),
+    "author": [{"@type":"Person","name": n.author||''}]
+  });
+  document.head.appendChild(schemaTag);
+
+  // view count (session guard)
+  const viewedKey = 'viewed_'+id;
+  if(!sessionStorage.getItem(viewedKey)){
+    sessionStorage.setItem(viewedKey,'1');
+    db.ref('news/'+id).update({ views: (n.views||0)+1 });
+  }
+
+  // related
+  const related = publishedNews().filter(([rid,rn])=>rid!==id && rn.sectionId===n.sectionId).slice(0,3);
+  document.getElementById('related-grid').innerHTML = related.map(cardHTML).join('') || '';
+
+  renderComments(id);
+  window.__currentArticleId = id;
+}
+
+// ---------- COMMENTS ----------
+function renderComments(articleId){
+  db.ref('comments/'+articleId).once('value').then(snap=>{
+    const data = snap.val() || {};
+    const arr = Object.entries(data).filter(([cid,c])=>c.status!=='rejected').sort((a,b)=>(b[1].date||0)-(a[1].date||0));
+    document.getElementById('comments-count').textContent = `التعليقات (${arr.length})`;
+    document.getElementById('comments-list').innerHTML = arr.map(([cid,c])=>`
+      <div class="comment-item">
+        <div class="c-head"><span class="c-name">${c.name}</span><span>${new Date(c.date).toLocaleDateString('ar-EG')}</span></div>
+        <p>${c.text}</p>
+        <button class="like-btn" onclick="likeComment('${articleId}','${cid}',${c.likes||0})">❤ ${c.likes||0}</button>
+      </div>`).join('') || `<div class="empty-state">كن أول من يعلق</div>`;
+  });
+}
+window.likeComment = (articleId, cid, current) => {
+  db.ref(`comments/${articleId}/${cid}`).update({ likes: current+1 }).then(()=>renderComments(articleId));
+};
+
+document.getElementById('comment-form').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const id = window.__currentArticleId;
+  const name = document.getElementById('c-name').value.trim();
+  const text = document.getElementById('c-text').value.trim();
+  if(!name||!text) return;
+  db.ref('comments/'+id).push({ name, text, date: Date.now(), likes:0, status:'approved' }).then(()=>{
+    document.getElementById('c-name').value='';
+    document.getElementById('c-text').value='';
+    renderComments(id);
+  });
+});
+
+window.shareArticle = () => {
+  if(navigator.share){ navigator.share({title: document.title, url: location.href}); }
+  else { copyLink(); }
+};
+window.copyLink = () => {
+  navigator.clipboard.writeText(location.href);
+  alert('تم نسخ الرابط');
+};
+
+// ---------- NEWSLETTER ----------
+document.getElementById('newsletter-form').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('newsletter-email').value.trim();
+  db.ref('newsletter').push({ email, date: Date.now() }).then(()=>{
+    document.getElementById('newsletter-email').value='';
+    alert('تم الاشتراك بنجاح');
+  });
+});
+
+// ---------- STATIC PAGES ----------
+function renderStaticPage(slug){
+  const p = (SETTINGS.pages && SETTINGS.pages[slug]) || pageDefaults[slug] || {title:'الصفحة غير موجودة', body:''};
+  document.getElementById('page-title').textContent = p.title;
+  document.getElementById('page-body').innerHTML = (p.body||'').split('\n').map(x=>`<p style="margin-bottom:12px;">${x}</p>`).join('');
+}
+
+// ---------- ROUTER ----------
+function route(){
+  const hash = location.hash || '#/';
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('article-view').classList.remove('active');
+  document.getElementById('page-view').style.display='none';
+
+  if(hash.startsWith('#/article/')){
+    const id = hash.replace('#/article/','');
+    document.getElementById('article-view').classList.add('active');
+    renderArticle(id);
+  } else if(hash.startsWith('#/section/')){
+    const secId = hash.replace('#/section/','');
+    document.getElementById('home-view').style.display='block';
+    document.getElementById('filter-section').value = secId;
+    renderHome();
+    renderLatestGrid(secId,'latest');
+    window.scrollTo(0,0);
+  } else if(hash.startsWith('#/page/')){
+    const slug = hash.replace('#/page/','');
+    document.getElementById('page-view').style.display='block';
+    renderStaticPage(slug);
+  } else {
+    document.getElementById('home-view').style.display='block';
+    renderHome();
+  }
+  document.querySelectorAll('nav.sections a').forEach(a=>{
+    a.classList.toggle('active', a.getAttribute('href')===hash);
+  });
+}
+window.addEventListener('hashchange', route);
+
+// ---------- THEME ----------
+const themeToggle = document.getElementById('theme-toggle');
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
+  themeToggle.textContent = t==='dark' ? '☀️' : '🌙';
+}
+setTheme(localStorage.getItem('theme') || 'light');
+themeToggle.addEventListener('click', ()=>{
+  setTheme(document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+});
+
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  transition:background .3s,color .3s;
+  line-height:1.7;
+}
+.display{font-family:'Aref Ruqaa',serif;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+a{color:inherit;text-decoration:none;}
+img{max-width:100%;display:block;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px;}
+.dawn-line{height:3px;background:var(--dawn-gradient);background-size:200% 100%;animation:dawnMove 6s linear infinite;}
+@keyframes dawnMove{0%{background-position:0% 0;}100%{background-position:200% 0;}}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:var(--card);box-shadow:var(--shadow);}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:16px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand img{width:48px;height:48px;border-radius:10px;object-fit:cover;}
+.brand h1{font-size:1.5rem;font-weight:700;}
+.brand span{display:block;font-size:.68rem;color:var(--amber);letter-spacing:.5px;font-family:'IBM Plex Mono',monospace;}
+.search-box{flex:1;max-width:360px;position:relative;}
+.search-box input{width:100%;padding:10px 40px 10px 14px;border-radius:99px;border:1px solid var(--border);background:var(--cream);color:var(--ink);font-family:inherit;font-size:.9rem;}
+.search-box svg{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;opacity:.5;}
+.icon-btn{width:40px;height:40px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;}
+.icon-btn:hover{background:var(--amber);color:#fff;}
+nav.sections{display:flex;gap:4px;overflow-x:auto;padding:10px 0;border-top:1px solid var(--border);scrollbar-width:none;}
+nav.sections::-webkit-scrollbar{display:none;}
+nav.sections a{white-space:nowrap;padding:7px 14px;border-radius:99px;font-size:.86rem;font-weight:500;color:var(--muted);transition:.2s;}
+nav.sections a:hover,nav.sections a.active{background:var(--night);color:#fff;}
+
+/* TICKER */
+.ticker-bar{background:var(--night);color:#fff;display:flex;align-items:center;overflow:hidden;}
+.ticker-label{background:var(--amber);padding:8px 18px;font-weight:700;font-size:.82rem;white-space:nowrap;flex-shrink:0;}
+.ticker-track{display:flex;white-space:nowrap;animation:ticker 28s linear infinite;padding:8px 0;}
+.ticker-track span{margin-left:60px;font-size:.86rem;}
+@keyframes ticker{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+
+/* HERO */
+.hero{padding:36px 0;}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:stretch;}
+.hero-main{position:relative;border-radius:var(--radius);overflow:hidden;min-height:420px;background:var(--night);}
+.hero-main img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;}
+.hero-main-content{position:relative;z-index:2;padding:32px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;min-height:420px;}
+.tag-chip{display:inline-block;background:var(--amber);color:#fff;font-size:.75rem;padding:4px 12px;border-radius:99px;margin-bottom:12px;width:fit-content;}
+.hero-main-content h2{font-size:1.9rem;font-family:'Aref Ruqaa',serif;font-weight:700;margin-bottom:10px;}
+.hero-main-content p{opacity:.85;font-size:.92rem;max-width:600px;}
+.hero-side{display:flex;flex-direction:column;gap:16px;}
+.hero-side-card{display:flex;gap:12px;background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow);flex:1;}
+.hero-side-card img{width:110px;height:90px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.hero-side-card h3{font-size:.95rem;font-weight:600;margin-bottom:6px;}
+.meta-row{display:flex;gap:10px;align-items:center;font-size:.74rem;color:var(--muted);margin-top:6px;flex-wrap:wrap;}
+.meta-row .dot{width:4px;height:4px;border-radius:50%;background:var(--muted);}
+
+/* SECTION HEADINGS */
+.section-block{padding:34px 0;}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.section-head h2{font-family:'Aref Ruqaa',serif;font-size:1.5rem;display:flex;align-items:center;gap:10px;}
+.section-head h2::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--amber);}
+.section-head a{font-size:.82rem;color:var(--amber);font-weight:600;}
+
+/* CARDS GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:.25s;display:flex;flex-direction:column;}
+.card:hover{transform:translateY(-4px);}
+.card .thumb{width:100%;aspect-ratio:16/10;object-fit:cover;}
+.card-body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.card-body h3{font-size:1rem;font-weight:600;line-height:1.5;}
+.card-body p{font-size:.83rem;color:var(--muted);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+
+/* HORIZONTAL LIST (trending/most viewed) */
+.rank-list{display:flex;flex-direction:column;}
+.rank-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);}
+.rank-item:last-child{border-bottom:none;}
+.rank-num{font-family:'Aref Ruqaa',serif;font-size:1.8rem;color:var(--amber);opacity:.5;width:36px;flex-shrink:0;}
+.rank-item img{width:80px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;}
+.rank-item h4{font-size:.9rem;font-weight:600;}
+
+.two-col{display:grid;grid-template-columns:1.6fr 1fr;gap:26px;}
+@media(max-width:900px){.two-col{grid-template-columns:1fr;}.hero-grid{grid-template-columns:1fr;}}
+
+/* NEWSLETTER */
+.newsletter{background:var(--night);color:#fff;border-radius:var(--radius);padding:34px;text-align:center;margin:34px 0;}
+.newsletter h2{font-family:'Aref Ruqaa',serif;font-size:1.5rem;margin-bottom:8px;}
+.newsletter p{opacity:.7;font-size:.88rem;margin-bottom:18px;}
+.newsletter form{display:flex;gap:10px;max-width:420px;margin:0 auto;flex-wrap:wrap;justify-content:center;}
+.newsletter input{flex:1;min-width:200px;padding:11px 16px;border-radius:99px;border:none;font-family:inherit;}
+.btn-amber{background:var(--amber);color:#fff;padding:11px 22px;border-radius:99px;font-weight:600;font-size:.88rem;}
+
+/* FOOTER */
+footer{background:var(--night);color:rgba(255,255,255,.6);padding:40px 0 20px;margin-top:40px;}
+.foot-grid{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:24px;margin-bottom:30px;}
+.foot-grid h4{color:#fff;font-size:.9rem;margin-bottom:12px;}
+.foot-grid a{display:block;font-size:.82rem;padding:4px 0;color:rgba(255,255,255,.55);}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:16px;text-align:center;font-size:.78rem;}
+@media(max-width:800px){.foot-grid{grid-template-columns:1fr 1fr;}}
+
+/* BANNER SLOT */
+.banner-slot{margin:20px 0;min-height:0;display:flex;justify-content:center;}
+
+/* ARTICLE VIEW */
+#article-view{display:none;}
+#article-view.active{display:block;}
+#home-view.hidden{display:none;}
+.article-header{padding:30px 0 20px;}
+.article-header h1{font-family:'Aref Ruqaa',serif;font-size:2rem;margin:14px 0;}
+.article-cover{width:100%;max-height:480px;object-fit:cover;border-radius:var(--radius);margin-bottom:20px;}
+.article-content{font-size:1.05rem;line-height:2;max-width:780px;margin:0 auto 30px;}
+.article-content p{margin-bottom:18px;}
+.share-row{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap;}
+.share-btn{padding:9px 16px;border-radius:99px;background:var(--card);box-shadow:var(--shadow);font-size:.82rem;display:flex;gap:6px;align-items:center;}
+.comments-block{max-width:780px;margin:0 auto;padding:30px 0;}
+.comment-form{display:flex;flex-direction:column;gap:10px;background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;}
+.comment-form input,.comment-form textarea{padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--cream);color:var(--ink);font-family:inherit;}
+.comment-item{padding:14px 0;border-bottom:1px solid var(--border);}
+.comment-item .c-head{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-bottom:6px;}
+.comment-item .c-name{font-weight:700;color:var(--ink);}
+.like-btn{font-size:.78rem;color:var(--amber);}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted);}
+.load-more{display:block;margin:30px auto 0;}
+.back-link{display:inline-flex;gap:6px;align-items:center;font-size:.85rem;color:var(--amber);font-weight:600;margin-bottom:16px;}
+.filters-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.filters-row select{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--ink);font-family:inherit;font-size:.85rem;}
+
 @media(max-width:640px){
   .top-bar{flex-wrap:wrap;gap:10px;padding:12px 0;}
   .brand h1{font-size:1.15rem;}
